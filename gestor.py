@@ -24,9 +24,12 @@ st.markdown("Cargue un archivo Excel, filtre datos, elimine duplicados, reordene
 archivo = st.file_uploader("📂 Sube tu archivo Excel", type=["xlsx"])
 
 if archivo:
-    df = pd.read_excel(archivo)
+    xls = pd.ExcelFile(archivo)
+    hojas = xls.sheet_names
+    hoja_seleccionada = st.selectbox("🗂 Selecciona la hoja a cargar", hojas)
+    df = pd.read_excel(xls, sheet_name=hoja_seleccionada)
     df.columns = df.columns.str.strip()  # Limpia espacios en nombres de columnas
-    st.success("✅ Archivo cargado exitosamente.")
+    st.success(f"✅ Hoja '{hoja_seleccionada}' cargada exitosamente.")
     st.dataframe(df.head())
 
     columnas = df.columns.tolist()
